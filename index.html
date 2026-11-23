@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIN It — Free VIN Check</title>
+<meta name="description" content="VIN It is a free iPhone app. Paste a VIN and get the car's spec, open safety recalls, crash-test ratings and owner complaints — built from official U.S. government records. No account, no ads, no paywall.">
+<meta property="og:title" content="VIN It — Free VIN Check">
+<meta property="og:description" content="Paste a VIN, get recalls, safety ratings and specs — free, from official U.S. government records.">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    --ink:#0a1324; --muted:#5a6678; --line:#e7ebf2;
+    --signal:#007aff; --signal-ink:#005fcc;
+    --good:#1a9c5b; --danger:#e23b3b; --warn:#c77700;
+    --bg:#f6f8fc; --card:#ffffff; --radius:22px;
+    --shadow:0 1px 2px rgba(10,19,36,.05), 0 12px 32px rgba(10,19,36,.07);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ink:#f3f6fc; --muted:#9aa6ba; --line:#222a3a;
+      --signal:#4da2ff; --signal-ink:#8cc2ff;
+      --good:#43c07f; --danger:#ff6a6a; --warn:#f0a63a;
+      --bg:#0a0e16; --card:#121826; --radius:22px;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#f3f6fc; --muted:#9aa6ba; --line:#222a3a;
+    --signal:#4da2ff; --signal-ink:#8cc2ff;
+    --good:#43c07f; --danger:#ff6a6a; --warn:#f0a63a;
+    --bg:#0a0e16; --card:#121826; --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 40px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:0 16px}
+  a{color:var(--signal-ink); text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header.hero{text-align:center; padding:72px 0 28px}
+  .mark{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:86px; height:86px; border-radius:24px;
+    background:linear-gradient(160deg,#0b1f45,#0a1324);
+    box-shadow:var(--shadow); margin-bottom:20px;
+  }
+  .mark svg{width:52px; height:52px}
+  h1{font-size:44px; line-height:1.05; letter-spacing:-.02em; margin:.1em 0 .15em; font-weight:800}
+  .tag{font-size:21px; color:var(--muted); margin:0 0 6px; font-weight:600}
+  .sub{font-size:16px; color:var(--muted); max-width:30em; margin:10px auto 0}
+
+  section{padding:34px 0; border-top:1px solid var(--line)}
+  h2{font-size:15px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 18px; font-weight:700}
+  h3{font-size:20px; margin:0 0 6px; letter-spacing:-.01em}
+  p{margin:0 0 14px}
+  .lead{font-size:19px; color:var(--ink)}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media (max-width:560px){ .grid{grid-template-columns:1fr} h1{font-size:36px} }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; box-shadow:var(--shadow);
+  }
+  .card .ic{font-size:22px; line-height:1; margin-bottom:10px; display:block}
+  .card h3{font-size:17px; margin-bottom:4px}
+  .card p{font-size:15px; color:var(--muted); margin:0}
+
+  .honest{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--warn);
+    border-radius:16px; padding:18px 20px; box-shadow:var(--shadow)}
+  .honest strong{color:var(--ink)}
+
+  .steps{display:grid; gap:12px; counter-reset:s}
+  .step{display:flex; gap:14px; align-items:flex-start}
+  .step .n{flex:0 0 28px; height:28px; border-radius:50%; background:var(--signal); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px}
+  .step p{margin:2px 0 0; color:var(--muted); font-size:15px}
+  .step b{color:var(--ink); font-weight:600}
+
+  .doc h3{margin-top:22px}
+  .doc p, .doc li{color:var(--muted); font-size:16px}
+  .doc ul{margin:0 0 14px; padding-left:20px}
+  .doc li{margin-bottom:7px}
+  .pill{display:inline-block; font-size:13px; font-weight:700; color:var(--good);
+    background:color-mix(in srgb,var(--good) 14%, transparent); padding:4px 11px; border-radius:999px; margin-bottom:12px}
+
+  footer{padding:36px 0 60px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; text-align:center}
+  footer p{margin:6px 0}
+  .mailbtn{display:inline-block; margin-top:4px; background:var(--signal); color:#fff; font-weight:700;
+    padding:12px 22px; border-radius:14px; box-shadow:var(--shadow)}
+  .mailbtn:hover{text-decoration:none; filter:brightness(1.05)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="21" cy="21" r="13" stroke="#4da2ff" stroke-width="4"/>
+        <line x1="30.5" y1="30.5" x2="41" y2="41" stroke="#4da2ff" stroke-width="5" stroke-linecap="round"/>
+        <text x="21" y="26" font-family="-apple-system,Helvetica,Arial" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">VIN</text>
+      </svg>
+    </div>
+    <h1>VIN It</h1>
+    <p class="tag">Check any car in seconds. Free.</p>
+    <p class="sub">Paste a VIN — new car, used car, or your own — and get what the official U.S. government databases know about it. No account. No ads. No paywall, ever.</p>
+  </header>
+
+  <section>
+    <h2>What you get, free</h2>
+    <div class="grid">
+      <div class="card"><span class="ic">🚗</span><h3>Full spec decode</h3><p>Year, make, model, trim, engine, drivetrain, body, where it was built.</p></div>
+      <div class="card"><span class="ic">⚠️</span><h3>Open safety recalls</h3><p>Every recall on record, with the urgent "stop driving" and "park outside" flags called out.</p></div>
+      <div class="card"><span class="ic">⭐</span><h3>Crash-test ratings</h3><p>Government NCAP star ratings — overall, frontal, side and rollover.</p></div>
+      <div class="card"><span class="ic">📋</span><h3>Owner complaints</h3><p>How many owners complained, and the parts they complained about most.</p></div>
+      <div class="card"><span class="ic">✅</span><h3>A buyer's checklist</h3><p>What to look at before you hand over money, in plain language.</p></div>
+      <div class="card"><span class="ic">🔒</span><h3>Free theft check link</h3><p>A direct link to the free NICB VINCheck for theft and salvage records.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Straight with you</h2>
+    <div class="honest">
+      <p><strong>What's free here is genuinely free.</strong> VIN It reads the public U.S. government car databases (NHTSA) right on your phone, so there's nothing to charge for.</p>
+      <p style="margin-bottom:0">The one thing no app gives away free is a full <strong>accident and title history</strong> — that's Carfax and AutoCheck, and they charge for it. We don't pretend to provide it, and we're not affiliated with NHTSA or Carfax. We just make the free government records easy to read.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where to find the VIN</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div><b>On the car</b><p>Look through the windshield at the driver's-side dashboard, or open the driver's door and read the sticker in the jamb.</p></div></div>
+      <div class="step"><div class="n">2</div><div><b>On paper</b><p>It's on your registration, your title, and your insurance card or app.</p></div></div>
+      <div class="step"><div class="n">3</div><div><b>Easiest</b><p>Copy it from your insurance app and paste it straight in — no typing 17 characters.</p></div></div>
+    </div>
+  </section>
+
+  <section class="doc" id="privacy">
+    <h2>Privacy Policy</h2>
+    <span class="pill">Data Not Collected</span>
+    <p>VIN It is built so there's nothing to collect. Here is exactly how it handles information.</p>
+    <h3>What leaves your phone</h3>
+    <p>Only the VIN you choose to check. When you tap "Check this car," the app sends that VIN to the public U.S. government databases (the National Highway Traffic Safety Administration, NHTSA) to look up the vehicle, the same way a web search works. Nothing else is sent.</p>
+    <h3>What we don't do</h3>
+    <ul>
+      <li>No accounts, logins, names, emails or phone numbers.</li>
+      <li>No analytics, tracking, advertising or third-party SDKs.</li>
+      <li>No location, contacts, photos or device identifiers.</li>
+      <li>No selling or sharing of data — there is none to sell.</li>
+    </ul>
+    <h3>What stays on your phone</h3>
+    <p>Your list of recent checks is stored on your device only, so you can tap back to a car you looked at. It never leaves the phone, and you can clear it any time from the home screen.</p>
+    <h3>NHTSA</h3>
+    <p>Vehicle data comes from NHTSA's free public APIs. Your use of their service is subject to NHTSA's own terms. VIN It is an independent app and is not affiliated with, or endorsed by, NHTSA.</p>
+    <h3>Children</h3>
+    <p>VIN It does not knowingly collect any information from anyone, including children.</p>
+    <h3>Changes</h3>
+    <p>If this policy ever changes, the updated version will be posted on this page.</p>
+  </section>
+
+  <section class="doc" id="support">
+    <h2>Support</h2>
+    <p>Questions, a VIN that won't decode, or an idea to make VIN It better? Email and a real person will read it.</p>
+    <p><a class="mailbtn" href="mailto:bobby@trainingties.com?subject=VIN%20It%20support">Email VIN It support</a></p>
+    <p style="font-size:15px; margin-top:14px">bobby@trainingties.com</p>
+    <h3>Common questions</h3>
+    <p><b>A VIN won't decode.</b> Double-check all 17 characters — a VIN never uses the letters I, O or Q (those spots are ones and zeros). Very new or very old vehicles are sometimes missing from the government database.</p>
+    <p><b>Why no accident history?</b> That isn't available free from anyone; see "Straight with you" above.</p>
+    <p><b>Is it really free?</b> Yes. No purchases, no subscription, no unlocks.</p>
+  </section>
+
+  <footer>
+    <p>VIN It — a free VIN check for iPhone.</p>
+    <p>Vehicle data from NHTSA public records. Not affiliated with NHTSA or Carfax.</p>
+    <p>© 2026 GrobeStreet · <a href="#privacy">Privacy</a> · <a href="#support">Support</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
